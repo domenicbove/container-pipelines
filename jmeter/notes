@@ -1,0 +1,2 @@
+oc process -f build.yml NAMESPACE=myproject -o yaml | oc create -f -
+oc process -f deployment.yml NAMESPACE=myproject -o yaml
