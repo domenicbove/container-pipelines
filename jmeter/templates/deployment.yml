@@ -3,11 +3,6 @@ kind: Template
 labels:
   template: basic-spring-boot
 metadata:
-  annotations:
-    description: Application template for JWS applications built using a Jenkins Pipeline
-    iconClass: icon-tomcat
-    tags: java,spring
-    version: 1.2.0
   name: basic-sprint-boot
 objects:
 - apiVersion: v1
@@ -68,10 +63,6 @@ objects:
       spec:
         containers:
         - env:
-          - name: JWS_ADMIN_USERNAME
-            value: ${JWS_ADMIN_USERNAME}
-          - name: JWS_ADMIN_PASSWORD
-            value: ${JWS_ADMIN_PASSWORD}
           image: ${APPLICATION_NAME}
           imagePullPolicy: Always
           name: ${APPLICATION_NAME}
@@ -83,12 +74,8 @@ objects:
             name: http
             protocol: TCP
           readinessProbe:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - curl -s 'http://localhost:8080${READINESS_PATH}'
-                |grep -iq '${READINESS_RESPONSE}'
+            tcpSocket:
+              port: 8080
         terminationGracePeriodSeconds: 60
     triggers:
     - imageChangeParams:
@@ -135,11 +122,3 @@ parameters:
 - description: 'Custom hostname for http service route.  Leave blank for default hostname,
     e.g.: <application-name>-<project>.<default-domain-suffix>'
   name: HOSTNAME_HTTP
-- description: 'URI to check for app health'
-  name: READINESS_PATH
-  required: true
-  value: '/'
-- description: 'String value expected back from readiness check'
-  name: READINESS_RESPONSE
-  required: true
-  value: 'Hello World!'
