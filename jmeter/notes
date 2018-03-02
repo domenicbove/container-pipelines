@@ -1,2 +1,17 @@
 oc process -f build.yml NAMESPACE=myproject -o yaml | oc create -f -
-oc process -f deployment.yml NAMESPACE=myproject -o yaml
+
+oc process -f deployment.yml NAMESPACE=myproject SA_NAMESPACE=myproject APPLICATION_NAME=basic-spring -o yaml | oc create -f -
+
+to create base java-jmeter image
+oc process -f jmeter-build.yml -o yaml | oc apply -f -
+oc start-build java-jmeter
+
+to create jenkins image w jmeter
+oc process -f jmeter-build.yml BASE_IMAGE=registry.access.redhat.com/openshift3/jenkins-slave-maven-rhel7 OUTPUT_IMAGE=jenkins-jmeter -o yaml | oc apply -f -
+oc start-build jenkins-jmeter
+
+to create the slave pods
+oc process -f jmeter-slave-deployment.yml -o yaml | oc create -f -
+
+oc new-project simple-server-dev
+oc new-project simple-server-stress

@@ -32,6 +32,11 @@ pipeline {
             cp -rfv ./target/*.\$t oc-build/deployments/ 2> /dev/null || echo "No \$t files"
           done
         """
+
+        sh """
+          oc process -f templates/build.yml APPLICATION_NAME=${APP_NAME} | oc apply -f -
+        """
+
         script {
           openshift.withCluster() {
             openshift.startBuild("${APP_NAME}", "--from-dir=oc-build", "--wait", "--follow")
@@ -42,6 +47,11 @@ pipeline {
 
     stage ('Verify Deployment to Dev') {
       steps {
+
+        sh """
+          oc process -f templates/deployment.yml APPLICATION_NAME=${APP_NAME} | oc apply -f -
+        """
+
         script {
           openshift.withCluster() {
             def dcObj = openshift.selector('dc', env.APP_NAME).object()
