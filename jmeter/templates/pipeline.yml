@@ -57,7 +57,7 @@ parameters:
   required: true
   value: https://github.com/domenicbove/simple-server.git
 - description: Git branch/tag reference
-  name: SOURCE_CODE_REF
+  name: SOURCE_CODE_BRANCH
   value: "master"
 - description: GitHub trigger secret
   from: '[a-zA-Z0-9]{8}'
